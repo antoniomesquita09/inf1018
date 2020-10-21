@@ -49,15 +49,34 @@ void big_comp2(BigInt res, BigInt a) {
     };
 }
 
+void big_sum(BigInt res, BigInt a, BigInt b) {
+    int i;
+    char rest, sub, sub2;
+    rest = 0x00;
+    for (i = 0; i < 16; i++) { // sum BigInt
+        res[i] = a[i] + b[i] + rest;
+
+        sub = 0xFF - a[i];
+        sub2 = b[i] + sub;
+        if (sub == 0x00 | sub2 == 0x00) { // if its too big
+            rest = 0x01;
+        } else {
+            rest = 0x00;
+        }
+    };
+}
+
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
-//            |          |         |         |         |         |         |         |  
+//            |          |         |         |         |         |         |         |
+
 int main(void) {
     int i;
-    long b = -2;
-    BigInt a = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    // long b = -2;
+    BigInt a = {0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x01, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt b = {0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     BigInt res;
 
-    big_comp2(res, a);
+    big_sum(res, a, b);
     for (i = 0; i < 16; i++) {
         printf("Result value %d: 0x%x\n", i, res[i]);
     };
