@@ -88,7 +88,7 @@ void big_sum(BigInt res, BigInt a, BigInt b) {
     return;
 }
 
-void big_sub(BigInt res, BigInt a, BigInt b) {
+void big_sub(BigInt res, BigInt a, BigInt b) { // Only accepts a greater than b 
     int i;
     BigInt compA, compB, compRes;
 
@@ -102,19 +102,6 @@ void big_sub(BigInt res, BigInt a, BigInt b) {
         };
         return;
     }
-        // else sum negative nums
-    big_comp2(compA, a);
-    big_comp2(compB, b);
-
-    for (i = 0; i < 16; i++) {
-        if (compB[i] < compA[i]) { // a smaller than b
-            compB[i+1] -= 0x01; // borrow from next
-            compRes[i] = 0xFF + compB[i] - compA[i];
-        }
-        compRes[i] = compB[i] - compA[i];
-    };
-    big_comp2(res, compRes);
-    return;
 }
 
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
