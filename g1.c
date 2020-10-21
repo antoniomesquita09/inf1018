@@ -61,7 +61,7 @@ void big_sum(BigInt res, BigInt a, BigInt b) {
 
             sub = 0xFF - a[i];
             sub2 = b[i] + sub;
-            if (sub == 0x00 | sub2 == 0x00) { // if its too big and positive
+            if (sub == 0x00 | sub2 == 0x00) { // if its too big
                 rest = 0x01;
             } else {
                 rest = 0x00;
@@ -78,7 +78,7 @@ void big_sum(BigInt res, BigInt a, BigInt b) {
 
         sub = 0xFF - compA[i];
         sub2 = compB[i] + sub;
-        if (sub == 0x00 | sub2 == 0x00) { // if its too big and positive
+        if (sub == 0x00 | sub2 == 0x00) { // if its too big
             rest = 0x01;
         } else {
             rest = 0x00;
@@ -88,7 +88,12 @@ void big_sum(BigInt res, BigInt a, BigInt b) {
     return;
 }
 
-void big_sub(BigInt res, BigInt a, BigInt b) {}
+void big_sub(BigInt res, BigInt a, BigInt b) {
+    int i;
+    for (i = 0; i < 16; i++) { // sub BigInt
+        res[i] = a[i] - b[i];
+    };
+}
 
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
 //            |          |         |         |         |         |         |         |
@@ -97,17 +102,17 @@ int main(void) {
     int i, j;
     long c = -4;
     long d = -8;
-    BigInt a = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    BigInt b = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt a = {0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt b = {0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     BigInt res, long4, long8;
 
-    big_val(long4, c);
-    big_val(long8, d);
-    for (j = 0; j < 16; j++) {
-        printf("Result long8 %d: 0x%x\n", j, long8[j]);
-    };
-    printf("Big sum =================>\n");
-    big_sum(res, long4, long4);
+    // big_val(long4, c);
+    // big_val(long8, d);
+    // for (j = 0; j < 16; j++) {
+    //     printf("Result long8 %d: 0x%x\n", j, long8[j]);
+    // };
+    printf("Sub sum =================>\n");
+    big_sub(res, a, b);
     for (i = 0; i < 16; i++) {
         printf("Result value %d: 0x%x\n", i, res[i]);
     };
