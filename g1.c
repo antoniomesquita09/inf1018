@@ -90,9 +90,7 @@ void big_sum(BigInt res, BigInt a, BigInt b) {
 
 void big_sub(BigInt res, BigInt a, BigInt b) {
     int i;
-    BigInt compB;
-    char rest, sub, sub2;
-    rest = 0x00;
+    BigInt compA, compB, compRes;
 
     if (a[0] < 0xEF & b[0] < 0xEF) { // a and b positives
         for (i = 0; i < 16; i++) {
@@ -104,6 +102,19 @@ void big_sub(BigInt res, BigInt a, BigInt b) {
         };
         return;
     }
+        // else sum negative nums
+    big_comp2(compA, a);
+    big_comp2(compB, b);
+
+    for (i = 0; i < 16; i++) {
+        if (compB[i] < compA[i]) { // a smaller than b
+            compB[i+1] -= 0x01; // borrow from next
+            compRes[i] = 0xFF + compB[i] - compA[i];
+        }
+        compRes[i] = compB[i] - compA[i];
+    };
+    big_comp2(res, compRes);
+    return;
 }
 
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
@@ -117,8 +128,11 @@ int main(void) {
     BigInt b = {0x04, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     BigInt res, long4, long8;
 
+    big_val(long4, c);
+    big_val(long8, d);
+
     printf("Sub sum =================>\n");
-    big_sub(res, b, a);
+    big_sub(res, long4, long8);
     for (i = 0; i < 16; i++) {
         printf("Result value %d: 0x%x\n", i, res[i]);
     };
