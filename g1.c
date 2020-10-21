@@ -104,6 +104,37 @@ void big_sub(BigInt res, BigInt a, BigInt b) { // Only accepts a greater than b
     }
 }
 
+void big_mul(BigInt res, BigInt a, BigInt b) { // WIP: not working
+    int i;
+    short aux, rest;
+
+    rest = 0x00;
+
+    for (i = 0; i < 16; i++) {
+        aux = a[i] * b[i];
+        res[i] = aux & 0x00ff;
+        rest = (aux >> 8) & 0x00ff;
+        a[i + 1] += rest;
+        printf("i %d => aux: 0x%x rest: 0x%x\n", i, aux, rest);
+    };
+    return;
+}
+
+void big_shl(BigInt res, BigInt a, int n) {
+    int i, bytes;
+
+    bytes = n / 8;
+
+    for (i = 15; i >= 0; i--) { // shift byte
+        if (i == 15) {
+            res[i] = 0x00;
+        } else {
+            res[i] = a[i + 1];
+        }
+    }
+    return;
+}
+
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
 //            |          |         |         |         |         |         |         |
 
@@ -111,15 +142,11 @@ int main(void) {
     int i, j;
     long c = -4;
     long d = -8;
-    BigInt a = {0x07, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    BigInt b = {0x04, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt a = {0xff, 0x04, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt b = {0xff, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     BigInt res, long4, long8;
 
-    big_val(long4, c);
-    big_val(long8, d);
-
-    printf("Sub sum =================>\n");
-    big_sub(res, long4, long8);
+    big_shl(res, a, 8);
     for (i = 0; i < 16; i++) {
         printf("Result value %d: 0x%x\n", i, res[i]);
     };
