@@ -51,32 +51,63 @@ void big_comp2(BigInt res, BigInt a) {
 
 void big_sum(BigInt res, BigInt a, BigInt b) {
     int i;
+    BigInt compA, compB, compRes;
     char rest, sub, sub2;
     rest = 0x00;
-    for (i = 0; i < 16; i++) { // sum BigInt
-        res[i] = a[i] + b[i] + rest;
 
-        sub = 0xFF - a[i];
-        sub2 = b[i] + sub;
-        if (sub == 0x00 | sub2 == 0x00) { // if its too big
+    if (a[0] < 0xEF & a[0] < 0xEF) { // sum positive nums
+        for (i = 0; i < 16; i++) { // sum BigInt
+            res[i] = a[i] + b[i] + rest;
+
+            sub = 0xFF - a[i];
+            sub2 = b[i] + sub;
+            if (sub == 0x00 | sub2 == 0x00) { // if its too big and positive
+                rest = 0x01;
+            } else {
+                rest = 0x00;
+            }
+        };
+        return;
+    }
+    // else sum negative nums
+    big_comp2(compA, a);
+    big_comp2(compB, b);
+
+    for (i = 0; i < 16; i++) { // sum BigInt
+        compRes[i] = compA[i] + compB[i] + rest;
+
+        sub = 0xFF - compA[i];
+        sub2 = compB[i] + sub;
+        if (sub == 0x00 | sub2 == 0x00) { // if its too big and positive
             rest = 0x01;
         } else {
             rest = 0x00;
         }
     };
+    big_comp2(res, compRes);
+    return;
 }
+
+void big_sub(BigInt res, BigInt a, BigInt b) {}
 
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
 //            |          |         |         |         |         |         |         |
 
 int main(void) {
-    int i;
-    // long b = -2;
-    BigInt a = {0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x01, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    BigInt b = {0xFF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    BigInt res;
+    int i, j;
+    long c = -4;
+    long d = -8;
+    BigInt a = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt b = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt res, long4, long8;
 
-    big_sum(res, a, b);
+    big_val(long4, c);
+    big_val(long8, d);
+    for (j = 0; j < 16; j++) {
+        printf("Result long8 %d: 0x%x\n", j, long8[j]);
+    };
+    printf("Big sum =================>\n");
+    big_sum(res, long4, long4);
     for (i = 0; i < 16; i++) {
         printf("Result value %d: 0x%x\n", i, res[i]);
     };
