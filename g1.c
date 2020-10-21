@@ -34,17 +34,32 @@ void big_val(BigInt res, long val) {
     return;
 }
 
+void big_comp2(BigInt res, BigInt a) {
+    int i, j;
+    for (i = 0; i < 16; i++) { // Invert bits
+        res[i] = ~a[i];
+    };
+    for (j = 0; j < 16; j++) { // sum 0x01
+        if (res[j] == 0xFF) {
+            res[j] = 0x00;
+        } else {
+            res[j] = res[j] + 0x01;
+            break;
+        }
+    };
+}
+
 // long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
 //            |          |         |         |         |         |         |         |  
 int main(void) {
     int i;
-    long b = 1;
-    // BigInt a = {0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    BigInt a;
+    long b = -2;
+    BigInt a = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    BigInt res;
 
-    big_val(a, b);
+    big_comp2(res, a);
     for (i = 0; i < 16; i++) {
-        printf("value %d: %x\n", i, a[i]);
+        printf("Result value %d: 0x%x\n", i, res[i]);
     };
     return 0;
 }
