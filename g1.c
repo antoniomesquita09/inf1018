@@ -121,16 +121,73 @@ void big_mul(BigInt res, BigInt a, BigInt b) { // WIP: not working
 }
 
 void big_shl(BigInt res, BigInt a, int n) {
-    int i, bytes;
+    BigInt aux;
+    unsigned char ass, ass2, zero;
 
-    bytes = n / 8;
-
-    for (i = 15; i >= 0; i--) { // shift byte
-        if (i == 15) {
-            res[i] = 0x00;
-        } else {
-            res[i] = a[i + 1];
+    int rest, i = 0, c = 0;
+    
+    c=0;
+   
+    rest = n % 8;
+  
+    if (rest == 0) {
+        c = n/8;									
+        while(i < 16) {
+            if(i < c) {
+                res[i] = 0x00;
+                } else
+                res[i] = a[i - c];
+            i++;
         }
+    } else {
+        ass = 0xFF << (8 - rest);
+	    zero = 0x00;
+
+        for(i=0; i<16; i++) {
+            ass2 = a[i] & ass;
+            res[i]=(a[i] << rest)|(zero >> (8-rest));
+            zero = ass2;
+        }
+        big_shl(res, res, n - rest);
+    }
+
+    return;
+}
+
+void big_shr(BigInt res, BigInt a, int n) {
+    BigInt aux;
+    unsigned char ass, ass2, zero;
+    int rest, i, c;
+
+    rest = n;
+    c = 0;
+    i = 16;
+   
+    rest = rest % 8;
+    
+    if(rest == 0) {
+        c = n/8;
+       
+        for(i = 16; i >= 0; i--) {
+            if(i > (15 - c)) {
+                aux[i] = 0x00;
+            } else {
+                aux[i] = a[i + c];
+            }
+        }
+    } else {
+        ass = 0xFF >> (8 - rest);
+        zero = 0x00;
+        for(i = 16; i >= 0; i--) {
+            ass2 = a[i] & ass;
+            aux[i] = (a[i] >> rest) | (zero << (8 - rest));
+            zero = ass2;
+        }
+        big_shr(aux, aux, (n-rest));
+    }
+  
+    for(i=0; i<16; i++) {
+        res[i] = aux[i];
     }
     return;
 }
@@ -142,11 +199,11 @@ int main(void) {
     int i, j;
     long c = -4;
     long d = -8;
-    BigInt a = {0xff, 0x04, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    BigInt a = {0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xdf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     BigInt b = {0xff, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     BigInt res, long4, long8;
 
-    big_shl(res, a, 8);
+    big_shr(res, a, 8);
     for (i = 0; i < 16; i++) {
         printf("Result value %d: 0x%x\n", i, res[i]);
     };
