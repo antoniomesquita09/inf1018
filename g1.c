@@ -106,31 +106,30 @@ void big_sub(BigInt res, BigInt a, BigInt b) { // Only accepts a greater than b
 
 void big_shl(BigInt res, BigInt a, int n) {
     BigInt aux;
-    unsigned char ass, ass2, zero;
+    unsigned char ass, ass2, init;
 
-    int rest, i = 0, c = 0;
-    
-    c=0;
+    int rest, i, multiple;
    
     rest = n % 8;
   
     if (rest == 0) {
-        c = n/8;									
+        multiple = n / 8;									
         while(i < 16) {
-            if(i < c) {
+            if(i < multiple) {
                 res[i] = 0x00;
-                } else
-                res[i] = a[i - c];
+            } else {
+                res[i] = a[i - multiple];
+            }
             i++;
         }
     } else {
         ass = 0xFF << (8 - rest);
-	    zero = 0x00;
+	    init = 0x00;
 
-        for(i=0; i<16; i++) {
+        for(i = 0; i < 16; i++) {
             ass2 = a[i] & ass;
-            res[i]=(a[i] << rest)|(zero >> (8-rest));
-            zero = ass2;
+            res[i]=(a[i] << rest) | (init >> (8 - rest));
+            init = ass2;
         }
         big_shl(res, res, n - rest);
     }
@@ -139,32 +138,30 @@ void big_shl(BigInt res, BigInt a, int n) {
 }
 
 void big_shr(BigInt res, BigInt a, int n) {
-    unsigned char ass, ass2, init;
-    int rest, i, c;
+    unsigned char aux, aux2, init;
+    int rest, i, multiple;
 
     rest = n;
-    c = 0;
-    i = 16;
    
     rest = rest % 8;
     
     if(rest == 0) {
-        c = n/8;
+        multiple = n / 8;
        
         for(i = 16; i >= 0; i--) {
-            if(i > (15 - c)) {
+            if(i > (15 - multiple)) {
                 res[i] = 0x00;
             } else {
-                res[i] = a[i + c];
+                res[i] = a[i + multiple];
             }
         }
     } else {
-        ass = 0xFF >> (8 - rest);
+        aux = 0xFF >> (8 - rest);
         init = 0x00;
         for(i = 16; i >= 0; i--) {
-            ass2 = a[i] & ass;
+            aux2 = a[i] & aux;
             res[i] = (a[i] >> rest) | (init << (8 - rest));
-            init = ass2;
+            init = aux2;
         }
         big_shr(res, res, n - rest);
     }
@@ -173,22 +170,20 @@ void big_shr(BigInt res, BigInt a, int n) {
 
 void big_sar(BigInt res, BigInt a, int n) {
     unsigned char aux, aux2, init;
-    int rest, i, c;
+    int rest, i, multiple;
 
     rest = n;
-    c = 0;
-    i = 16;
    
     rest = rest % 8;
     
     if(rest == 0) {
-        c = n / 8;
+        multiple = n / 8;
        
         for(i = 16; i >= 0; i--) {
-            if(i > (15 - c)) {
+            if(i > (15 - multiple)) {
                 res[i] = 0xFF;
             } else {
-                res[i] = a[i + c];
+                res[i] = a[i + multiple];
             }
         }
     } else {
@@ -202,22 +197,4 @@ void big_sar(BigInt res, BigInt a, int n) {
         big_shr(res, res, n - rest);
     }
     return;
-}
-
-// long b = 0x 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0001;
-//            |          |         |         |         |         |         |         |
-
-int main(void) {
-    int i, j;
-    long c = -4;
-    long d = -8;
-    BigInt a = {0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xdf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    BigInt b = {0xff, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    BigInt res, res2, long4, long8;
-
-    big_sar(res, b, 8);
-    for (i = 0; i < 16; i++) {
-        printf("Result value %d: 0x%x\n", i, res[i]);
-    };
-    return 0;
 }
