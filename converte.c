@@ -27,29 +27,25 @@ int conta_bytes(char s) {
 
 int utf_varint(FILE *arq_entrada, FILE *arq_saida) {
     char current;
-    int numread, totalBytes;
+    int numread, totalBytes, i;
     
     if (arq_entrada == NULL || arq_saida == NULL) {
 		fputs("erro de leitura de arquivo.", stderr);
 		return 0;
 	}
 
-    numread = fread(&current, 1, 1, arq_entrada);
-
-    while(numread == 1) {
+    while(fread(&current, 1, 1, arq_entrada)) {
         totalBytes = conta_bytes(current);
 
         if (totalBytes == 0) {
             dump(&current, sizeof(current));
         } else {
-            printf("current: ");
-            dump(&current, sizeof(current));
             printf("\ntotalBytes: %d\n", totalBytes);
 
-            for(;totalBytes != 0; --totalBytes) {
+            for(i = totalBytes; i > 0; --i) {
                 dump(&current, sizeof(current));
                 printf("\n");
-                // fread(&current, 1, 1, arq_entrada);
+                fread(&current, 1, 1, arq_entrada);
             }
 
         }
