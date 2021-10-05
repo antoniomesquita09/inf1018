@@ -25,8 +25,8 @@ int utf_varint(FILE *arq_entrada, FILE *arq_saida) {
     unsigned int aux;
 
     if (arq_entrada == NULL || arq_saida == NULL) {
-		fputs("erro de leitura de arquivo.", stderr);
-		return 0;
+		fputs("Erro de leitura de arquivo.", stderr);
+		return -1;
 	}
 
 
@@ -37,11 +37,11 @@ int utf_varint(FILE *arq_entrada, FILE *arq_saida) {
         // printf("\ntotalBytes: %d\n", totalBytes);
 
         if (totalBytes == 0) {
-            printf("\nChar: %c\n", current);
+            // printf("\nChar: %c\n", current);
 
             // Unify to 32 bits result
             aux = aux | current;
-            printf("\nResult char: %.4X\n", aux);
+            // printf("\nResult char: %.4X\n", aux);
         } else {
             for(i = totalBytes; i > 0; --i) {
                 parse = 2;
@@ -71,13 +71,12 @@ int utf_varint(FILE *arq_entrada, FILE *arq_saida) {
 
                 fread(&current, 1, 1, arq_entrada);
             }
-            printf("\nResult unicode: %.4X\n", aux);
+            // printf("\nResult unicode: %.4X\n", aux);
         }
-        printf("\n=================>\n");
-        // fread(&current, 1, 1, arq_entrada);
+        fwrite(&aux, sizeof(int), 1, arq_saida);
     }
 
-    return 1;
+    return 0;
 }
 
 // 0000 0000 0000 0000 0000 0000 0000 0000
@@ -91,3 +90,17 @@ int utf_varint(FILE *arq_entrada, FILE *arq_saida) {
 // 0000 0000 0000 0000 0000 0000 1000 1001
 // ---------------------------------------
 // 0000 0000 0000 0000 0010 0010 0100 0000
+
+
+// ===============================================================================================+>>>>>>>>>>
+
+int varint_utf(FILE *arq_entrada, FILE *arq_saida) {
+    unsigned int aux;
+
+    while(fread(&aux, sizeof(int), 1, arq_entrada)) {
+
+        printf("\n0x%0.4X\n", aux);
+    }
+
+    return 0;
+}
