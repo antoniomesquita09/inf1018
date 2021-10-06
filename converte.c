@@ -109,15 +109,12 @@ int utf_varint(FILE *arq_entrada, FILE *arq_saida) {
 // ===============================================================================================+>>>>>>>>>>
 
 int varint_utf(FILE *arq_entrada, FILE *arq_saida) {
-    long rSize;
-    long wSize;
+    long rSize, wSize;
     int i, j;
     unsigned int *bufferRead;
     unsigned int *bufferWrite;
     unsigned char *p;
-    char ordenacao;
-    char qtdBitSig;
-    char qtdZeros;
+    char ordenacao, qtdBitSig, qtdZeros;
     unsigned int varUTF8;
 
     if (arq_entrada == NULL || arq_saida == NULL) {
@@ -145,28 +142,10 @@ int varint_utf(FILE *arq_entrada, FILE *arq_saida) {
     ordenacao = isLittleEndian();
 
     fread(bufferRead, 4, rSize / 4, arq_entrada);
-    printf("O tamanho de buffer eh: %ld bytes\n", rSize);
-
-    //print e comparação com dump
-    for (i = 0; i < rSize / 4; i++)
-        printf("%c", bufferRead[i]);
-    printf("\n\n");
-
-    printf("int* buffer:\n");
-    for (i = 0; i < rSize / 4; i++)
-        printf("%08X|", bufferRead[i]);
-
-    //dump (&buffer[0], lSize);
-    printf("\n\n");
 
     for (i = 1; i < rSize / 4; i++)
         if (ordenacao)
             bufferWrite[i - 1] = inverte32(bufferRead[i]);
-
-    printf("inverso int* buffer (sem BOM):\n");
-    for (i = 0; i < wSize / 4; i++)
-        printf("%02X|", bufferWrite[i]);
-    printf("\n\n");
 
     p = &bufferWrite;
     wSize /= 4;
