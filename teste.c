@@ -7,33 +7,33 @@
 #include "converte.h"
 
 int main(void) {
-	// FILE* utf8_pequeno_in = fopen("peq_utf.txt", "rb");
-	// if (utf8_pequeno_in == NULL) {
+	// FILE* file_in_utf8 = fopen("utf8_peq.txt", "rb");
+	// if (file_in_utf8 == NULL) {
     //     fputs("Erro ao abrir arquivo: peq_utf.txt", stderr);
     //     exit(1);
     // }
 
-	// FILE* varint_pequeno_out = fopen("peq_varint_out.txt", "wb");
-    // if (varint_pequeno_out == NULL) {
-    //     fputs("Erro ao abrir arquivo: peq_varint_out.txt", stderr);
+	// FILE* file_out_varint = fopen("out_varint.txt", "wb");
+    // if (file_out_varint == NULL) {
+    //     fputs("Erro ao abrir arquivo: out_varint.txt", stderr);
     //     exit(1);
     // }
 
-    // utf_varint(utf8_pequeno_in, varint_pequeno_out);
+    // utf_varint(file_in_utf8, file_out_varint);
 
-	FILE* varint_pequeno_in = fopen("peq_varint_out.txt", "rb");
-    if (varint_pequeno_in == NULL) {
-        fputs("Erro ao abrir arquivo: peq_varint_out.txt", stderr);
+	FILE* file_in_varint = fopen("out_varint.txt", "rb");
+	if (file_in_varint == NULL) {
+        fputs("Erro ao abrir arquivo: out_varint.txt", stderr);
         exit(1);
     }
 
-	FILE* utf8_pequeno_out = fopen("peq_utf_out.txt", "wb");
-    if (utf8_pequeno_out == NULL) {
-        fputs("Erro ao abrir arquivo: peq_utf_out.txt", stderr);
+	FILE* file_out_utf8 = fopen("out_utf8.txt", "wb");
+    if (file_out_utf8 == NULL) {
+        fputs("Erro ao abrir arquivo: out_utf8.txt", stderr);
         exit(1);
     }
 
-    varint_utf(varint_pequeno_in, utf8_pequeno_out);
+    varint_utf(file_in_varint, file_out_utf8);
 
-    return 1;
+    return 0;
 }
